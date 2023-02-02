@@ -13,6 +13,7 @@
   <?php
   ini_set('memory_limit', '-1');
   $MIME_TYPES = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'application/vnd.oasis.opendocument.text'];
+  $IS_REMOVE_COMMON_WORDS = false;
   function debug_to_console($str, $data)
   {
     $output = $data;
@@ -49,12 +50,18 @@
   </div>
   <div id="file-upload-form" class="hidden">
     <form action="index.php" method="post" enctype="multipart/form-data">
-      Select original file to upload:
-      <input type="file" name="originalFileToUpload" id="fileToUpload">
+      <div class="upload-forms">
+        <div class="file-input-container">
+          <label for="originalFileToUpload">Select original file to upload:</label>
+          <input type="file" name="originalFileToUpload" id="fileToUpload">
+        </div>
+        <input type="submit" value="Upload Text" name="submit" class="upload-button">
+        <div class="file-input-container">
+          <label for="newFileToUpload">Select new file to upload:</label>
+          <input type="file" name="newFileToUpload" id="fileToUpload">
+        </div>
 
-      Select new file to upload:
-      <input type="file" name="newFileToUpload" id="fileToUpload">
-      <input type="submit" value="Upload Text" name="submit">
+      </div>
     </form>
   </div>
 
@@ -73,8 +80,8 @@
 
   <?php
   require_once 'fetchURL.php';
-  $originalTextarea = '<textarea name="original-text" id="original-text" cols="75" rows="30">';
-  $newTextarea = '<textarea name="new-text" id="new-text" cols="75" rows="30">';
+  $originalTextarea = '<textarea name="original-text" class="input-box" id="original-text" cols="75" rows="30">';
+  $newTextarea = '<textarea name="new-text" class="input-box" id="new-text" cols="75" rows="30">';
   // <!-- URL upload logic -->
   if (isset($_POST["original-text-url"])) {
     if ($_POST["original-text-url"] == '') {
@@ -113,8 +120,6 @@
       $newTextarea .= htmlspecialchars($data);
     }
   }
-  $newTextarea .= '</textarea>';
-  $originalTextarea .= '</textarea>';
 
   // Keep original text in textarea after submit
   if (isset($_POST["original-text"])) {
@@ -123,10 +128,12 @@
   if (isset($_POST["new-text"])) {
     $newTextarea .= $_POST["new-text"];
   }
+  $newTextarea .= '</textarea>';
+  $originalTextarea .= '</textarea>';
   ?>
 
 
-  <form action="index.php" method="POST" id="string-new-form">
+  <form action="index.php" method="POST" id="string-new-form" class="input-container">
     <div class="outer-input-container">
       <div class='input-container'>
         <label for="original-text">Please enter original text</label>
@@ -147,10 +154,11 @@
   <div class="container">
 
     <?php
-    require_once 'vendor/autoload.php';
+    require_once 'Calculator.php';
+    require_once 'HtmlStylist.php';
     // String difference calculator
-    $stylist = new JSandersUK\StringDiffs\Stylists\HtmlStylist();
-    $calculator = new JSandersUK\StringDiffs\Calculator($stylist);
+    $stylist = new HtmlStylist();
+    $calculator = new Calculator($stylist);
     if (isset($_POST["original-text"])) {
       $original_text = $_POST["original-text"];
       $new_text = $_POST["new-text"];
@@ -181,21 +189,26 @@
     <div class="kw-container">
       KW Density original-text:
       <table border='1'>
-        <!-- //TODO -->
         <?php
         require 'create-kw-table.php';
         if (isset($_POST["original-text"])) {
           $original_text = $_POST["original-text"];
           $new_text = $_POST["new-text"];
-          if (isset($_POST['isDouble'])) {
-            if ($_POST['isDouble'] === 'single') {
-              $isDouble = false;
-            } else {
-              $isDouble = true;
-            }
-          }
-          $kw = $calculator->counter($original_text, $new_text, $isDouble = false);
-          createKWTable($kw["KwOriginal"], $kw["KwNew"]);
+          $kw = $calculator->counter($original_text, $new_text);
+          createKWTable($kw["KwSingleOriginal"], $kw["KwSingleNew"]);
+        }
+        ?>
+      </table>
+    </div>
+    <div class="kw-container kw-container--hidden">
+      KW Density original-text:
+      <table border='1'>
+        <?php
+        if (isset($_POST["original-text"])) {
+          $original_text = $_POST["original-text"];
+          $new_text = $_POST["new-text"];
+          $kw = $calculator->counter($original_text, $new_text);
+          createKWTable($kw["KwDoubleOriginal"], $kw["KwDoubleNew"]);
         }
         ?>
       </table>
@@ -214,17 +227,9 @@
         } ?>
       </p>
     </div>
-    <form action="index.php" method="post">
-      <select name="isDouble" id="kwNumber">
-        <option value="single">single word</option>
-        <option value="double">double word</option>
-      </select>
-    </form>
-    <script>
-      document.getElementById('kwNumber').addEventListener('change', function () {
-        this.form.submit();
-      });
-    </script>
+
+    <button id="kw-changer" class="upload-button">Double</button>
+
     <div class="kw-container">
       KW Density new-text:
       <table border="1">
@@ -232,15 +237,35 @@
         if (isset($_POST["original-text"])) {
           $original_text = $_POST["original-text"];
           $new_text = $_POST["new-text"];
-          if (isset($_POST['isDouble'])) {
-            echo $_POST['isDouble'];
-          }
-          $kw = $calculator->counter($original_text, $new_text, $isDouble);
-          createKWTable($kw["KwNew"], $kw["KwOriginal"]);
+          $kw = $calculator->counter($original_text, $new_text);
+          createKWTable($kw["KwSingleNew"], $kw["KwSingleOriginal"]);
         }
         ?>
       </table>
     </div>
+    <div class="kw-container kw-container--hidden">
+      KW Density new-text:
+      <table border="1">
+        <?php
+        if (isset($_POST["original-text"])) {
+          $original_text = $_POST["original-text"];
+          $new_text = $_POST["new-text"];
+          $kw = $calculator->counter($original_text, $new_text);
+          createKWTable($kw["KwDoubleNew"], $kw["KwDoubleOriginal"]);
+        }
+        ?>
+      </table>
+    </div>
+    <script>
+      const kwButton = document.getElementById('kw-changer');
+      kwButton.addEventListener('click', function () {
+        let kwTables = document.getElementsByClassName('kw-container');
+        kwButton.innerHTML = kwButton.innerHTML === 'Single' ? 'Double' : 'Single';
+        for (var i = 0; i < kwTables.length; i++) {
+          kwTables[i].classList.toggle('kw-container--hidden');
+        }
+      });
+    </script>
   </div>
 </body>
 
