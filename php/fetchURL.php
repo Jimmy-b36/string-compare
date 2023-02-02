@@ -7,17 +7,29 @@ function getUrlContents(string $url)
   }
 
   $site = file_get_contents("$url");
-  $site = preg_replace('/[^A-Za-z0-9<\/>\-]/', ' ', $site);
+  $site = preg_match("/<body[^>]*>(.*?)<\/body>/is", $site, $matches) ? $matches[1] : $site;
 
-  // Check if <main> element exists
-  if (strpos($site, '<main') !== false) {
-    preg_match("/<main[^>]*>(.*?)<\/main>/is", $site, $matches);
-    echo preg_replace('/\s+/', ' ', strip_tags($matches[1]));
-  } else {
-    preg_match("/<body[^>]*>(.*?)<\/body>/is", $site, $matches);
-    // If <main> element doesn't exist, return the entire page
-    return preg_replace('/\s+/', ' ', strip_tags($matches[1]));
+  $dom = new DOMDocument;
+  $dom->loadHTML($site);
+
+  $xpath = new DOMXPath($dom);
+
+  $headings = $xpath->query("//h1 | //h2 | //h3 | //h4 | //h5 | //h6");
+  $paragraphs = $xpath->query("//p");
+
+  $headings_text = '';
+  $paragraphs_text = '';
+
+  foreach ($headings as $heading) {
+    $headings_text .= $heading->nodeValue . " ";
   }
+
+  foreach ($paragraphs as $paragraph) {
+    $paragraphs_text .= $paragraph->nodeValue . " ";
+  }
+
+  return $headings_text . " " . $paragraphs_text;
 }
 
-?>
+echo getUrlContents('https://onlinetextcompare.com/')
+  ?>
