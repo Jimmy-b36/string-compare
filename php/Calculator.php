@@ -29,10 +29,10 @@ class Calculator
     {
         $GLOBALS['WORD_COUNT_OLD'] = str_word_count($old);
         $GLOBALS['WORD_COUNT_NEW'] = str_word_count($new);
-        if ($GLOBALS['IS_REMOVE_COMMON_WORDS']) {
-            $old = $this->cleanString($old);
-            $new = $this->cleanString($new);
-        }
+
+        $old = $this->cleanString($old);
+        $new = $this->cleanString($new);
+
 
 
         $chunkedOldArr = array();

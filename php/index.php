@@ -13,7 +13,6 @@
   <?php
   ini_set('memory_limit', '-1');
   $MIME_TYPES = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'application/vnd.oasis.opendocument.text'];
-  $IS_REMOVE_COMMON_WORDS = false;
   function debug_to_console($str, $data)
   {
     $output = $data;
