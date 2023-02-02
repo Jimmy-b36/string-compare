@@ -26,6 +26,18 @@ h1 {
   width: 100%;
 }
 
+.kw-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.kw-container--hidden {
+  display: none;
+}
+
 .header {
   display: flex;
   flex-direction: column;
@@ -48,7 +60,13 @@ h1 {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: 0 -0.5em;
+}
+
+.file-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .upload-button {
@@ -59,6 +77,7 @@ h1 {
   border-radius: 10px;
   justify-self: center;
   cursor: pointer;
+  height: 3em;
 }
 
 .upload-forms {
@@ -73,7 +92,7 @@ h1 {
   font-size: 1.2em;
   width: 50%;
   white-space: wrap;
-  margin: 0.25em;
+  margin: 0.25em 1em;
   border: 2px solid black;
 }
 
@@ -104,14 +123,14 @@ p {
 .input-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 
 .outer-input-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -120,14 +139,6 @@ p {
   font-size: 1.5em;
   width: 50%;
   justify-self: center;
-}
-
-.kw-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
 }
 
 .hidden {
