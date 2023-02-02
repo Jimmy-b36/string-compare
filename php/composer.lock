@@ -1,0 +1,104 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "c577e794f257cb88788eff894870a78a",
+    "packages": [
+        {
+            "name": "bramus/ansi-php",
+            "version": "3.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bramus/ansi-php.git",
+                "reference": "9aefed0d9088d87fe230ff83885d3e5562a7fd8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bramus/ansi-php/zipball/9aefed0d9088d87fe230ff83885d3e5562a7fd8a",
+                "reference": "9aefed0d9088d87fe230ff83885d3e5562a7fd8a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Bramus\\Ansi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bramus Van Damme",
+                    "email": "bramus@bram.us",
+                    "homepage": "https://www.bram.us/"
+                }
+            ],
+            "description": "ANSI Control Functions and ANSI Control Sequences (Colors, Erasing, etc.) for PHP CLI Apps",
+            "support": {
+                "issues": "https://github.com/bramus/ansi-php/issues",
+                "source": "https://github.com/bramus/ansi-php/tree/3.0.4"
+            },
+            "time": "2021-10-21T07:23:09+00:00"
+        },
+        {
+            "name": "jsandersuk/string-diffs",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jsandersuk/string-diffs.git",
+                "reference": "bf89498efe8f0bee394f7d5447b6267338daf8f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jsandersuk/string-diffs/zipball/bf89498efe8f0bee394f7d5447b6267338daf8f6",
+                "reference": "bf89498efe8f0bee394f7d5447b6267338daf8f6",
+                "shasum": ""
+            },
+            "require": {
+                "bramus/ansi-php": "3.0.*",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JSandersUK\\StringDiffs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Sanders",
+                    "email": "contact@jsanders.uk"
+                }
+            ],
+            "description": "Locates and highlights differences between two strings",
+            "support": {
+                "issues": "https://github.com/jsandersuk/string-diffs/issues",
+                "source": "https://github.com/jsandersuk/string-diffs/tree/master"
+            },
+            "time": "2018-06-01T11:14:42+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}
