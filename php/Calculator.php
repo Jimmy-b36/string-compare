@@ -32,9 +32,6 @@ class Calculator
 
         $old = $this->cleanString($old);
         $new = $this->cleanString($new);
-
-
-
         $chunkedOldArr = array();
         $chunkedNewArr = array();
         for ($i = 0; $i < count($old); $i++) {
@@ -49,13 +46,9 @@ class Calculator
         }
         $countDoubleOld = array_count_values($chunkedOldArr);
         $countDoubleNew = array_count_values($chunkedNewArr);
-
-
-
         $countSingleOld = array_count_values($old);
         $countSingleNew = array_count_values($new);
         return array("KwSingleOriginal" => $countSingleOld, "KwSingleNew" => $countSingleNew, "KwDoubleOriginal" => $countDoubleOld, "KwDoubleNew" => $countDoubleNew);
-
     }
 
     public function diff(string $old, string $new): array
