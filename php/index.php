@@ -12,7 +12,7 @@
 <body>
   <?php
   ini_set('memory_limit', '-1');
-  $MIME_TYPES = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'application/vnd.oasis.opendocument.text'];
+  $MIME_TYPES = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'application/vnd.oasis.opendocument.text', 'application/msword', 'application/pdf'];
   function debug_to_console($str, $data)
   {
     $output = $data;
@@ -23,7 +23,7 @@
   } ?>
 
   <div class="header">
-    <h1>Text-compare</h1>
+    <h1>Text Compare - Plagiarism Check Between Two Documents</h1>
   </div>
 
   <div class="container"><button id="toggle-button" class="upload-button">Upload file</button></div>
@@ -32,12 +32,12 @@
   <div id="URL-form">
     <form action="index.php" method="post">
       <div class="upload-forms">
-        <div class="URL-input-container">
+        <div class="URL-input-container--left">
           <label for="original-text-url">Original text url:</label>
           <input type="text" name="original-text-url" id="original-text-url" class="input-box">
         </div>
-        <input type="submit" value="Submit" class="upload-button" />
-        <div class="URL-input-container">
+        <input type="submit" value="Submit URL" class="upload-button" />
+        <div class="URL-input-container--right">
           <label for="new-text-url">New text url:</label>
           <input type="text" name="new-text-url" id="new-text-url" class="input-box">
         </div>
@@ -79,6 +79,8 @@
 
   <?php
   require_once 'fetchURL.php';
+  include 'vendor/autoload.php';
+  $parser = new \Smalot\PdfParser\Parser();
   $originalTextarea = '<textarea name="original-text" class="input-box" id="original-text" cols="75" rows="30">';
   $newTextarea = '<textarea name="new-text" class="input-box" id="new-text" cols="75" rows="30">';
   // <!-- URL upload logic -->
@@ -103,6 +105,12 @@
       $originalTextarea .= 'No file selected or Error uploading file';
     } elseif (!in_array($_FILES['originalFileToUpload']['type'], $MIME_TYPES)) {
       $originalTextarea .= 'Invalid file type';
+    } elseif ($_FILES['originalFileToUpload']['size'] > 1000000) {
+      $originalTextarea .= 'File size too large';
+    } elseif ($_FILES['originalFileToUpload']['type'] === 'application/pdf') {
+      $pdf = $parser->parseFile($_FILES['originalFileToUpload']['tmp_name']);
+      $text = $pdf->getText();
+      $originalTextarea .= htmlspecialchars($text);
     } else {
       $data = file_get_contents($_FILES['originalFileToUpload']['tmp_name']);
       $originalTextarea .= htmlspecialchars($data);
@@ -114,6 +122,14 @@
       $newTextarea .= 'No file selected or Error uploading file';
     } elseif (!in_array($_FILES['newFileToUpload']['type'], $MIME_TYPES)) {
       $newTextarea .= 'Invalid file type';
+
+    } elseif ($_FILES['newFileToUpload']['size'] > 1000000) {
+      $newTextarea .= 'File size too large';
+    } elseif ($_FILES['newFileToUpload']['type'] === 'application/pdf') {
+      $pdf = $parser->parseFile($_FILES['newFileToUpload']['tmp_name']);
+      $text = $pdf->getText();
+      preg_replace('/\s+/', '', $text);
+      $newTextarea .= htmlspecialchars($text);
     } else {
       $data = file_get_contents($_FILES['newFileToUpload']['tmp_name']);
       $newTextarea .= htmlspecialchars($data);
@@ -135,23 +151,19 @@
   <form action="index.php" method="POST" id="string-new-form" class="input-container">
     <div class="outer-input-container">
       <div class='input-container'>
-        <label for="original-text">Please enter original text</label>
+        <label for="original-text">Please enter original text:</label>
         <?= $originalTextarea ?>
       </div>
       <div class="input-container">
-        <label for="new-text">Please enter new text</label>
+        <label for="new-text">Please enter new text:</label>
         <?= $newTextarea ?>
       </div>
     </div>
-    <input type="submit" value="Submit" class="submit-button" />
+    <input type="submit" value="Compare texts" class="submit-button" />
   </form>
 
 
-
-
-
   <div class="container">
-
     <?php
     require_once 'Calculator.php';
     require_once 'HtmlStylist.php';
@@ -183,34 +195,66 @@
     </div>
   </div>
 
-  <div class="container">
-    <!-- KW density calculators -->
-    <div class="kw-container">
-      KW Density original-text:
-      <table border='1'>
-        <?php
-        require 'create-kw-table.php';
-        if (isset($_POST["original-text"])) {
-          $original_text = $_POST["original-text"];
-          $new_text = $_POST["new-text"];
-          $kw = $calculator->counter($original_text, $new_text);
-          createKWTable($kw["KwSingleOriginal"], $kw["KwSingleNew"]);
-        }
-        ?>
-      </table>
-    </div>
-    <div class="kw-container kw-container--hidden">
-      KW Density original-text:
-      <table border='1'>
-        <?php
-        if (isset($_POST["original-text"])) {
-          $original_text = $_POST["original-text"];
-          $new_text = $_POST["new-text"];
-          $kw = $calculator->counter($original_text, $new_text);
-          createKWTable($kw["KwDoubleOriginal"], $kw["KwDoubleNew"]);
-        }
-        ?>
-      </table>
+  <div class="kw-container--outer">
+    <div class="kw-container--inner">
+      <!-- KW density calculators -->
+      <div class="kw-container">
+        KW Density original-text:
+        <table border='1'>
+          <?php
+          require 'create-kw-table.php';
+          if (isset($_POST["original-text"])) {
+            $original_text = $_POST["original-text"];
+            $new_text = $_POST["new-text"];
+            $kw = $calculator->counter($original_text, $new_text);
+            createKWTable($kw["KwSingleOriginal"], $kw["KwSingleNew"]);
+          }
+          ?>
+        </table>
+      </div>
+      <div class="kw-container kw-container--hidden">
+        KW Density original-text:
+        <table border='1'>
+          <?php
+          if (isset($_POST["original-text"])) {
+            $original_text = $_POST["original-text"];
+            $new_text = $_POST["new-text"];
+            $kw = $calculator->counter($original_text, $new_text);
+            createKWTable($kw["KwDoubleOriginal"], $kw["KwDoubleNew"]);
+          }
+          ?>
+        </table>
+      </div>
+
+
+      <button id="kw-changer" class="upload-button">Double</button>
+
+      <div class="kw-container">
+        KW Density new-text:
+        <table border="1">
+          <?php
+          if (isset($_POST["original-text"])) {
+            $original_text = $_POST["original-text"];
+            $new_text = $_POST["new-text"];
+            $kw = $calculator->counter($original_text, $new_text);
+            createKWTable($kw["KwSingleNew"], $kw["KwSingleOriginal"]);
+          }
+          ?>
+        </table>
+      </div>
+      <div class="kw-container kw-container--hidden">
+        KW Density new-text:
+        <table border="1">
+          <?php
+          if (isset($_POST["original-text"])) {
+            $original_text = $_POST["original-text"];
+            $new_text = $_POST["new-text"];
+            $kw = $calculator->counter($original_text, $new_text);
+            createKWTable($kw["KwDoubleNew"], $kw["KwDoubleOriginal"]);
+          }
+          ?>
+        </table>
+      </div>
     </div>
     <div class="wc-container">
       <p>
@@ -225,35 +269,6 @@
           echo $GLOBALS['WORD_COUNT_NEW'];
         } ?>
       </p>
-    </div>
-
-    <button id="kw-changer" class="upload-button">Double</button>
-
-    <div class="kw-container">
-      KW Density new-text:
-      <table border="1">
-        <?php
-        if (isset($_POST["original-text"])) {
-          $original_text = $_POST["original-text"];
-          $new_text = $_POST["new-text"];
-          $kw = $calculator->counter($original_text, $new_text);
-          createKWTable($kw["KwSingleNew"], $kw["KwSingleOriginal"]);
-        }
-        ?>
-      </table>
-    </div>
-    <div class="kw-container kw-container--hidden">
-      KW Density new-text:
-      <table border="1">
-        <?php
-        if (isset($_POST["original-text"])) {
-          $original_text = $_POST["original-text"];
-          $new_text = $_POST["new-text"];
-          $kw = $calculator->counter($original_text, $new_text);
-          createKWTable($kw["KwDoubleNew"], $kw["KwDoubleOriginal"]);
-        }
-        ?>
-      </table>
     </div>
     <script>
       const kwButton = document.getElementById('kw-changer');
