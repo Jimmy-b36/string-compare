@@ -54,16 +54,10 @@ class Calculator
 
     public function diff(string $old, string $new): array
     {
-        if (str_word_count($old) > 5000) {
+        if (str_word_count($old) > 5000 || str_word_count($new) > 5000) {
             return [
-                'old' => 'Original text is too long please submit 5000 words or less',
-                'new' => $new
-            ];
-        }
-        if (str_word_count($new) > 5000) {
-            return [
-                'old' => $old,
-                'new' => 'New text is too long please submit 5000 words or less'
+                'old' => 'Text is too long please submit 5000 words or less',
+                'new' => 'Text is too long please submit 5000 words or less'
             ];
         }
         $diff = $this->diffArray(
