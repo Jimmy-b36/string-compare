@@ -54,7 +54,7 @@
           <label for="originalFileToUpload">Select original file to upload:</label>
           <input type="file" name="originalFileToUpload" id="fileToUpload">
         </div>
-        <input type="submit" value="Upload Text" name="submit" class="upload-button">
+        <input type="submit" value="Upload" name="submit" class="upload-button">
         <div class="file-input-container">
           <label for="newFileToUpload">Select new file to upload:</label>
           <input type="file" name="newFileToUpload" id="fileToUpload">
