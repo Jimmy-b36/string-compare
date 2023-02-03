@@ -14,6 +14,7 @@ class Calculator
     public function cleanString(string $string): array
     {
         $string = preg_replace('/[^A-Za-z0-9\- \n]/', '', $string);
+        $string = preg_replace('/(--)/', ' ', $string);
         $string = preg_replace('/\s+/', ' ', $string);
         $stringArr = explode(' ', strtolower($string));
         for ($i = 0; $i < count($stringArr); $i++) {
