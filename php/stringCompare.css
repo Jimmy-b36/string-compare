@@ -19,10 +19,35 @@ h1 {
   align-items: center;
   flex-direction: row;
 }
+
+#fileToUpload {
+  margin: 0.67em 0;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
 .container {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  width: 100%;
+}
+
+.kw-container--outer {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.kw-container--inner {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
   width: 100%;
 }
 
@@ -45,7 +70,12 @@ h1 {
   align-items: center;
   width: 100%;
   height: 7em;
-  background-color: #e6e6e6;
+  color: aliceblue;
+  border-radius: 10px;
+  background: #040045;
+  background: -moz-linear-gradient(left, #040045 0%, #2c2789 100%);
+  background: -webkit-linear-gradient(left, #040045 0%, #2c2789 100%);
+  background: linear-gradient(to right, #040045 0%, #2c2789 100%);
 }
 
 .wc-container {
@@ -55,16 +85,23 @@ h1 {
   width: 100%;
 }
 
-.URL-input-container {
+.URL-input-container--left {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: end;
+  width: 100%;
+}
+.URL-input-container--right {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
   width: 100%;
 }
 
 .file-input-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   width: 100%;
 }
@@ -80,17 +117,22 @@ h1 {
   height: 3em;
 }
 
+.upload-button:hover {
+  background-color: #cacaca;
+}
+
 .upload-forms {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   align-items: center;
+  justify-content: center;
   width: 100%;
 }
 
 .str-results {
   font-size: 1.2em;
   width: 50%;
+  padding: 0.5em;
   white-space: wrap;
   margin: 0.25em 1em;
   border: 2px solid black;
@@ -103,9 +145,16 @@ h1 {
 
 td {
   padding: 0.25em;
-  border: 1px solid black;
+  border: 1px solid #cacaca;
   justify-content: center;
   align-items: center;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+  border: 1px solid #cacaca;
+  width: 50%;
 }
 
 p {
@@ -136,9 +185,11 @@ p {
 
 .submit-button {
   margin: 0.67em 0;
+  border-radius: 10px;
   font-size: 1.5em;
-  width: 50%;
+  width: 25%;
   justify-self: center;
+  cursor: pointer;
 }
 
 .hidden {
