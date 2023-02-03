@@ -12,7 +12,6 @@ function getUrlContents(string $url)
   // Check if <main> element exists
   if (strpos($site, '<main') !== false) {
     preg_match("/<main[^>]*>(.*?)<\/main>/is", $site, $matches);
-
     return preg_replace('/\s+/', ' ', strip_tags($matches[1]));
   } else {
     preg_match("/<body[^>]*>(.*?)<\/body>/is", $site, $matches);
