@@ -79,8 +79,8 @@
 
   <?php
   require_once 'fetchURL.php';
-  include 'vendor/autoload.php';
-  $parser = new \Smalot\PdfParser\Parser();
+  require_once 'handleFileUpload.php';
+
   $originalTextarea = '<textarea name="original-text" class="input-box" id="original-text" cols="75" rows="30">';
   $newTextarea = '<textarea name="new-text" class="input-box" id="new-text" cols="75" rows="30">';
   // <!-- URL upload logic -->
@@ -99,41 +99,11 @@
     }
   }
 
-  // <!-- Original file upload logic -->
-  if (isset($_FILES['originalFileToUpload']['tmp_name'])) {
-    if ($_FILES['originalFileToUpload']['error'] !== 0) {
-      $originalTextarea .= 'No file selected or Error uploading file';
-    } elseif (!in_array($_FILES['originalFileToUpload']['type'], $MIME_TYPES)) {
-      $originalTextarea .= 'Invalid file type';
-    } elseif ($_FILES['originalFileToUpload']['size'] > 1000000) {
-      $originalTextarea .= 'File size too large';
-    } elseif ($_FILES['originalFileToUpload']['type'] === 'application/pdf') {
-      $pdf = $parser->parseFile($_FILES['originalFileToUpload']['tmp_name']);
-      $text = $pdf->getText();
-      $originalTextarea .= htmlspecialchars($text);
-    } else {
-      $data = file_get_contents($_FILES['originalFileToUpload']['tmp_name']);
-      $originalTextarea .= htmlspecialchars($data);
-    }
+  if (isset($_FILES["originalFileToUpload"])) {
+    $originalTextarea .= handleFileUpload($_FILES["originalFileToUpload"]);
   }
-  // <!-- New file upload logic -->
-  if (isset($_FILES['newFileToUpload']['tmp_name'])) {
-    if ($_FILES['newFileToUpload']['error'] !== 0) {
-      $newTextarea .= 'No file selected or Error uploading file';
-    } elseif (!in_array($_FILES['newFileToUpload']['type'], $MIME_TYPES)) {
-      $newTextarea .= 'Invalid file type';
-
-    } elseif ($_FILES['newFileToUpload']['size'] > 1000000) {
-      $newTextarea .= 'File size too large';
-    } elseif ($_FILES['newFileToUpload']['type'] === 'application/pdf') {
-      $pdf = $parser->parseFile($_FILES['newFileToUpload']['tmp_name']);
-      $text = $pdf->getText();
-      preg_replace('/\s+/', '', $text);
-      $newTextarea .= htmlspecialchars($text);
-    } else {
-      $data = file_get_contents($_FILES['newFileToUpload']['tmp_name']);
-      $newTextarea .= htmlspecialchars($data);
-    }
+  if (isset($_FILES["newFileToUpload"])) {
+    $newTextarea .= handleFileUpload($_FILES["newFileToUpload"]);
   }
 
   // Keep original text in textarea after submit
@@ -196,66 +166,7 @@
   </div>
 
   <div class="kw-container--outer">
-    <div class="kw-container--inner">
-      <!-- KW density calculators -->
-      <div class="kw-container">
-        KW Density original-text:
-        <table border='1'>
-          <?php
-          require 'create-kw-table.php';
-          if (isset($_POST["original-text"])) {
-            $original_text = $_POST["original-text"];
-            $new_text = $_POST["new-text"];
-            $kw = $calculator->counter($original_text, $new_text);
-            createKWTable($kw["KwSingleOriginal"], $kw["KwSingleNew"]);
-          }
-          ?>
-        </table>
-      </div>
-      <div class="kw-container kw-container--hidden">
-        KW Density original-text:
-        <table border='1'>
-          <?php
-          if (isset($_POST["original-text"])) {
-            $original_text = $_POST["original-text"];
-            $new_text = $_POST["new-text"];
-            $kw = $calculator->counter($original_text, $new_text);
-            createKWTable($kw["KwDoubleOriginal"], $kw["KwDoubleNew"]);
-          }
-          ?>
-        </table>
-      </div>
-
-
-      <button id="kw-changer" class="upload-button">Double</button>
-
-      <div class="kw-container">
-        KW Density new-text:
-        <table border="1">
-          <?php
-          if (isset($_POST["original-text"])) {
-            $original_text = $_POST["original-text"];
-            $new_text = $_POST["new-text"];
-            $kw = $calculator->counter($original_text, $new_text);
-            createKWTable($kw["KwSingleNew"], $kw["KwSingleOriginal"]);
-          }
-          ?>
-        </table>
-      </div>
-      <div class="kw-container kw-container--hidden">
-        KW Density new-text:
-        <table border="1">
-          <?php
-          if (isset($_POST["original-text"])) {
-            $original_text = $_POST["original-text"];
-            $new_text = $_POST["new-text"];
-            $kw = $calculator->counter($original_text, $new_text);
-            createKWTable($kw["KwDoubleNew"], $kw["KwDoubleOriginal"]);
-          }
-          ?>
-        </table>
-      </div>
-    </div>
+    <?php include 'kw-table.php'; ?>
     <div class="wc-container">
       <p>
         Original text word count:
