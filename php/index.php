@@ -12,7 +12,7 @@
 <body>
   <?php
   ini_set('memory_limit', '-1');
-  $MIME_TYPES = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'application/vnd.oasis.opendocument.text', 'application/msword', 'application/pdf'];
+
   function debug_to_console($str, $data)
   {
     $output = $data;
@@ -81,8 +81,8 @@
   require_once 'fetchURL.php';
   require_once 'handleFileUpload.php';
 
-  $originalTextarea = '<textarea name="original-text" class="input-box" id="original-text" cols="75" rows="30">';
-  $newTextarea = '<textarea name="new-text" class="input-box" id="new-text" cols="75" rows="30">';
+  $originalTextarea = '<textarea name="original-text" maxLength="5000" class="input-box" id="original-text" cols="75" rows="30">';
+  $newTextarea = '<textarea name="new-text" maxLength="5000" class="input-box" id="new-text" cols="75" rows="30">';
   // <!-- URL upload logic -->
   if (isset($_POST["original-text-url"])) {
     if ($_POST["original-text-url"] == '') {
@@ -141,6 +141,8 @@
     $stylist = new HtmlStylist();
     $calculator = new Calculator($stylist);
     if (isset($_POST["original-text"])) {
+      $WORD_COUNT_OLD = str_word_count($_POST["original-text"]);
+      $WORD_COUNT_NEW = str_word_count($_POST["new-text"]);
       $original_text = $_POST["original-text"];
       $new_text = $_POST["new-text"];
       if ($original_text == '' || $new_text == '') {
@@ -150,6 +152,7 @@
         ];
       } else {
         $result = $calculator->diff($original_text, $new_text);
+        debug_to_console('old', $result['old']);
       }
     }
     ?>
@@ -170,14 +173,14 @@
     <div class="wc-container">
       <p>
         Original text word count:
-        <?php if (isset($GLOBALS['WORD_COUNT_OLD'])) {
-          echo $GLOBALS['WORD_COUNT_OLD'];
+        <?php if (isset($WORD_COUNT_OLD)) {
+          echo $WORD_COUNT_OLD;
         } ?>
       </p>
       <p>
         New text word count:
-        <?php if (isset($GLOBALS['WORD_COUNT_NEW'])) {
-          echo $GLOBALS['WORD_COUNT_NEW'];
+        <?php if (isset($WORD_COUNT_NEW)) {
+          echo $WORD_COUNT_NEW;
         } ?>
       </p>
     </div>
