@@ -8,6 +8,13 @@
 
 function getUrlContents(string $url): string
 {
+  if (!filter_var($url, FILTER_VALIDATE_URL)) {
+    return 'Invalid URL';
+  }
+  if (strpos($url, 'http') === false || strpos($url, 'https') === false) {
+    return 'URL must start with http or https';
+  }
+  $url = strip_tags($url);
   $page = file_get_contents("$url");
   $page = preg_replace('/[^A-Za-z0-9<\/>\-]/', ' ', $page);
 
