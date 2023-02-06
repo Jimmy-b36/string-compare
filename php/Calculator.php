@@ -1,6 +1,5 @@
 <?php
-$WORD_COUNT_OLD = 0;
-$WORD_COUNT_NEW = 0;
+
 
 class Calculator
 {
@@ -13,12 +12,15 @@ class Calculator
 
     public function cleanString(string $string): array
     {
+        $COMMON_WORDS = ["the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he", "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this", "have", "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "people", "my", "than", "first", "water", "been", "call", "who", "its", "now", "find", "long", "down", "day", "did", "get", "come", "made", "may", "part", " ", "ishydrated", 'sit'];
+
+
         $string = preg_replace('/[^A-Za-z0-9\- \n]/', '', $string);
         $string = preg_replace('/(--)/', ' ', $string);
         $string = preg_replace('/\s+/', ' ', $string);
         $stringArr = explode(' ', strtolower($string));
         for ($i = 0; $i < count($stringArr); $i++) {
-            if (in_array($stringArr[$i], $GLOBALS['COMMON_WORDS'])) {
+            if (in_array($stringArr[$i], $COMMON_WORDS)) {
                 unset($stringArr[$i]);
                 $stringArr = array_values($stringArr);
             }
@@ -26,10 +28,13 @@ class Calculator
         return $stringArr;
     }
 
-    public function counter(string $old, string $new)
+
+
+
+
+    public function counter(string $old, string $new): array
     {
-        $GLOBALS['WORD_COUNT_OLD'] = str_word_count($old);
-        $GLOBALS['WORD_COUNT_NEW'] = str_word_count($new);
+
 
         $old = $this->cleanString($old);
         $new = $this->cleanString($new);
@@ -45,25 +50,56 @@ class Calculator
                 array_push($chunkedNewArr, "{$new[$i]} {$new[$i + 1]}");
             }
         }
-        $countDoubleOld = array_count_values($chunkedOldArr);
-        $countDoubleNew = array_count_values($chunkedNewArr);
-        $countSingleOld = array_count_values($old);
-        $countSingleNew = array_count_values($new);
+        $countDoubleOld = array_reduce($chunkedOldArr, function ($carry, $item) {
+            if (!isset($carry[$item])) {
+                $carry[$item] = 0;
+            }
+            $carry[$item]++;
+            return $carry;
+        }, []);
+        $countDoubleNew = array_reduce($chunkedNewArr, function ($carry, $item) {
+            if (!isset($carry[$item])) {
+                $carry[$item] = 0;
+            }
+            $carry[$item]++;
+            return $carry;
+        }, []);
+        $countSingleOld = array_reduce($old, function ($carry, $item) {
+            if (!isset($carry[$item])) {
+                $carry[$item] = 0;
+            }
+            $carry[$item]++;
+            return $carry;
+        }, []);
+        $countSingleNew = array_reduce($new, function ($carry, $item) {
+            if (!isset($carry[$item])) {
+                $carry[$item] = 0;
+            }
+            $carry[$item]++;
+            return $carry;
+        }, []);
+
         return array("KwSingleOriginal" => $countSingleOld, "KwSingleNew" => $countSingleNew, "KwDoubleOriginal" => $countDoubleOld, "KwDoubleNew" => $countDoubleNew);
     }
 
     public function diff(string $old, string $new): array
     {
+        $placeholder = '_NEWLINE_';
+
         if (str_word_count($old) > 5000 || str_word_count($new) > 5000) {
             return [
                 'old' => 'Text is too long please submit 5000 words or less',
                 'new' => 'Text is too long please submit 5000 words or less'
             ];
         }
+        $modifiedOld = str_replace("\r\n", $placeholder, $old);
+        $modifiedNew = str_replace("\r\n", $placeholder, $new);
+
         $diff = $this->diffArray(
-            str_split($old),
-            str_split($new)
+            str_split($modifiedOld),
+            str_split($modifiedNew)
         );
+
         $oldString = '';
         $newString = '';
         foreach ($diff as $item) {
@@ -80,6 +116,9 @@ class Calculator
                 $newString .= $item;
             }
         }
+
+        $oldString = str_replace($placeholder, "<br/>", $oldString) . "<br/>";
+        $newString = str_replace($placeholder, "<br/>", $newString) . "<br/>";
         return [
             'old' => $oldString,
             'new' => $newString
