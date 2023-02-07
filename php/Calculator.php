@@ -34,8 +34,6 @@ class Calculator
 
     public function counter(string $old, string $new): array
     {
-
-
         $old = $this->cleanString($old);
         $new = $this->cleanString($new);
         $chunkedOldArr = array();
@@ -94,6 +92,8 @@ class Calculator
         }
         $modifiedOld = str_replace("\r\n", $placeholder, $old);
         $modifiedNew = str_replace("\r\n", $placeholder, $new);
+        $modifiedOld = strip_tags($modifiedOld);
+        $modifiedNew = strip_tags($modifiedNew);
 
         $diff = $this->diffArray(
             str_split($modifiedOld),
