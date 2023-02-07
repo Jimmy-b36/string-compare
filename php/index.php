@@ -11,7 +11,9 @@
 
 <body>
   <?php
-  ini_set('memory_limit', '-1');
+  ini_set('post_max_size', '50M');
+  ini_set('upload_max_filesize', '50M');
+  ini_set('memory_limit', '5G');
 
   function debug_to_console($str, $data)
   {
@@ -52,12 +54,16 @@
       <div class="upload-forms">
         <div class="file-input-container">
           <label for="originalFileToUpload">Select original file to upload:</label>
-          <input type="file" name="originalFileToUpload" id="fileToUpload">
+          <input type="file"
+            accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain,application/vnd.oasis.opendocument.text,application/msword,application/pdf"
+            name="originalFileToUpload" id="fileToUpload">
         </div>
         <input type="submit" value="Upload" name="submit" class="upload-button">
         <div class="file-input-container">
           <label for="newFileToUpload">Select new file to upload:</label>
-          <input type="file" name="newFileToUpload" id="fileToUpload">
+          <input type="file"
+            accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain,application/vnd.oasis.opendocument.text,application/msword,application/pdf"
+            name="newFileToUpload" id="fileToUpload">
         </div>
 
       </div>
@@ -81,8 +87,8 @@
   require_once 'fetchURL.php';
   require_once 'handleFileUpload.php';
 
-  $originalTextarea = '<textarea name="original-text" maxLength="5000" class="input-box" id="original-text" cols="75" rows="30">';
-  $newTextarea = '<textarea name="new-text" maxLength="5000" class="input-box" id="new-text" cols="75" rows="30">';
+  $originalTextarea = '<textarea name="original-text" maxLength="34000" class="input-box" id="original-text" cols="75" rows="30">';
+  $newTextarea = '<textarea name="new-text" maxLength="34000" class="input-box" id="new-text" cols="75" rows="30">';
   // <!-- URL upload logic -->
   if (isset($_POST["original-text-url"])) {
     if ($_POST["original-text-url"] == '') {
@@ -143,6 +149,8 @@
     if (isset($_POST["original-text"])) {
       $WORD_COUNT_OLD = str_word_count($_POST["original-text"]);
       $WORD_COUNT_NEW = str_word_count($_POST["new-text"]);
+      $CHARACTER_COUNT_OLD = strlen($_POST["original-text"]);
+      $CHARACTER_COUNT_NEW = strlen($_POST["new-text"]);
       $original_text = $_POST["original-text"];
       $new_text = $_POST["new-text"];
       if ($original_text == '' || $new_text == '') {
@@ -175,13 +183,21 @@
         Original text word count:
         <?php if (isset($WORD_COUNT_OLD)) {
           echo $WORD_COUNT_OLD;
-        } ?>
+        }
+        if (isset($CHARACTER_COUNT_OLD)) {
+          echo ' (' . $CHARACTER_COUNT_OLD . ' characters)';
+        }
+        ?>
       </p>
       <p>
         New text word count:
         <?php if (isset($WORD_COUNT_NEW)) {
           echo $WORD_COUNT_NEW;
-        } ?>
+        }
+        if (isset($CHARACTER_COUNT_NEW)) {
+          echo ' (' . $CHARACTER_COUNT_NEW . ' characters)';
+        }
+        ?>
       </p>
     </div>
     <script>
