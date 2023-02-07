@@ -10,13 +10,18 @@ function handleFileUpload($file)
   if ($file['error'] !== 0) {
     return 'No file selected or Error uploading file';
   }
+
   if (!in_array($file['type'], $MIME_TYPES)) {
-    return 'Invalid file type';
+    return 'File type not supported';
   }
-  if ($file['size'] > 100000) {
+  if ($file['size'] > 100000000) {
     return 'File size too large';
   }
   if ($file['type'] === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    $text = read_file_docx($file['tmp_name']);
+    return htmlspecialchars($text);
+  }
+  if ($file['type'] === 'application/msword') {
     $text = read_file_docx($file['tmp_name']);
     return htmlspecialchars($text);
   }
