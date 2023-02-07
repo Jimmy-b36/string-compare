@@ -1,3 +1,15 @@
 {
-  "php.version": "php"
+  "php.version": "php",
+  "cSpell.words": [
+    "msword",
+    "NOENT",
+    "NOERROR",
+    "NOWARNING",
+    "officedocument",
+    "opendocument",
+    "openxmlformats",
+    "pngblip",
+    "Smalot",
+    "wordprocessingml"
+  ]
 }
