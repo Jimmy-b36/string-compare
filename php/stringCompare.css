@@ -236,3 +236,12 @@ p {
     font-size: 1.5em;
   }
 }
+
+ins {
+  background-color: #aeffae;
+  text-decoration: none;
+}
+del {
+  background-color: #ff9b9b;
+  text-decoration: none;
+}
