@@ -4,11 +4,13 @@
     KW Density original-text:
     <table border='1'>
       <?php
+      require_once "Counter.php";
+      $wordCounter = new Counter();
       require 'create-kw-table.php';
       if (isset($_POST["original-text"])) {
         $original_text = $_POST["original-text"];
         $new_text = $_POST["new-text"];
-        $kw = $calculator->counter($original_text, $new_text);
+        $kw = $wordCounter->counter($original_text, $new_text);
         createKWTable($kw["KwSingleOriginal"], $kw["KwSingleNew"]);
       }
       ?>
@@ -21,13 +23,12 @@
       if (isset($_POST["original-text"])) {
         $original_text = $_POST["original-text"];
         $new_text = $_POST["new-text"];
-        $kw = $calculator->counter($original_text, $new_text);
+        $kw = $wordCounter->counter($original_text, $new_text);
         createKWTable($kw["KwDoubleOriginal"], $kw["KwDoubleNew"]);
       }
       ?>
     </table>
   </div>
-
 
   <button id="kw-changer" class="upload-button">Double</button>
 
@@ -38,7 +39,7 @@
       if (isset($_POST["original-text"])) {
         $original_text = $_POST["original-text"];
         $new_text = $_POST["new-text"];
-        $kw = $calculator->counter($original_text, $new_text);
+        $kw = $wordCounter->counter($original_text, $new_text);
         createKWTable($kw["KwSingleNew"], $kw["KwSingleOriginal"]);
       }
       ?>
@@ -51,7 +52,7 @@
       if (isset($_POST["original-text"])) {
         $original_text = $_POST["original-text"];
         $new_text = $_POST["new-text"];
-        $kw = $calculator->counter($original_text, $new_text);
+        $kw = $wordCounter->counter($original_text, $new_text);
         createKWTable($kw["KwDoubleNew"], $kw["KwDoubleOriginal"]);
       }
       ?>
