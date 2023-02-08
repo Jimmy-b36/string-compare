@@ -13,7 +13,7 @@
   <?php
   ini_set('post_max_size', '50M');
   ini_set('upload_max_filesize', '50M');
-  ini_set('memory_limit', '5G');
+  ini_set('memory_limit', '512M');
 
   function debug_to_console($str, $data)
   {
@@ -141,11 +141,9 @@
 
   <div class="container">
     <?php
-    require_once 'Calculator.php';
-    require_once 'HtmlStylist.php';
-    // String difference calculator
-    $stylist = new HtmlStylist();
-    $calculator = new Calculator($stylist);
+
+    require_once 'StringCompare.php';
+    $stringCompare = new StringCompare();
     if (isset($_POST["original-text"])) {
       $WORD_COUNT_OLD = str_word_count($_POST["original-text"]);
       $WORD_COUNT_NEW = str_word_count($_POST["new-text"]);
@@ -159,7 +157,7 @@
           'new' => 'No text entered'
         ];
       } else {
-        $result = $calculator->diff($original_text, $new_text);
+        $result = $stringCompare->stringDiff($original_text, $new_text);
         debug_to_console('old', $result['old']);
       }
     }
