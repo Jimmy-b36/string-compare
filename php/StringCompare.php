@@ -46,7 +46,7 @@ class StringCompare
     ];
   }
 
-  public function diffArray($old, $new)
+  public function diffArray(array $old, array $new): array
   {
     # Create an array of all the lines in each file
     $matrix = array();
