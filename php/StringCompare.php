@@ -48,15 +48,23 @@ class StringCompare
 
   public function diffArray($old, $new)
   {
+    # Create an array of all the lines in each file
     $matrix = array();
     $maxlen = 0;
 
+    # Loop through each line of the old file
     foreach ($old as $oldIndex => $oldValue) {
+      # Find all the instances of this line in the new file
       $newKeys = array_keys($new, $oldValue);
+      # Loop through each instance of this line in the new file
       foreach ($newKeys as $newIndex) {
+        # If this is the first instance of this line, set the value to 1
+        # Otherwise, increment the value by 1
         $matrix[$oldIndex][$newIndex] = isset($matrix[$oldIndex - 1][$newIndex - 1]) ? 
           $matrix[$oldIndex - 1][$newIndex - 1] + 1 : 1;
         if ($matrix[$oldIndex][$newIndex] > $maxlen) {
+          # If this is the longest sequence of matching lines yet,
+          # store the length and the location of the sequence in the files
           $maxlen = $matrix[$oldIndex][$newIndex];
           $oldMax = $oldIndex + 1 - $maxlen;
           $newMax = $newIndex + 1 - $maxlen;
@@ -64,8 +72,10 @@ class StringCompare
       }
     }
     if ($maxlen == 0) {
+      # If no lines match, return the entire files as a difference
       return array(array('deleted' => $old, 'inserted' => $new));
     }
+    # Otherwise, return the differences between the files
     return array_merge(
       $this->diffArray(array_slice($old, 0, $oldMax), array_slice($new, 0, $newMax)),
       array_slice($new, $newMax, $maxlen),
