@@ -6,10 +6,10 @@ class StringCompare
   {
     $placeholder = '_NEWLINE_';
 
-    if (str_word_count($old) > 5000 || str_word_count($new) > 5000) {
+    if (str_word_count($old) > 10000 || str_word_count($new) > 10000) {
       return [
-        'old' => 'Text is too long please submit 5000 words or less',
-        'new' => 'Text is too long please submit 5000 words or less'
+        'old' => 'Text is too long please submit 10000 words or less',
+        'new' => 'Text is too long please submit 10000 words or less'
       ];
     }
     $modifiedOld = str_replace("\r\n", $placeholder, $old);

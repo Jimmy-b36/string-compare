@@ -87,8 +87,8 @@
   require_once 'fetchURL.php';
   require_once 'handleFileUpload.php';
 
-  $originalTextarea = '<textarea name="original-text" maxLength="34000" class="input-box" id="original-text" cols="75" rows="30">';
-  $newTextarea = '<textarea name="new-text" maxLength="34000" class="input-box" id="new-text" cols="75" rows="30">';
+  $originalTextarea = '<textarea name="original-text" maxLength="68000" class="input-box" id="original-text" cols="75" rows="30">';
+  $newTextarea = '<textarea name="new-text" maxLength="68000" class="input-box" id="new-text" cols="75" rows="30">';
   // <!-- URL upload logic -->
   if (isset($_POST["original-text-url"])) {
     if ($_POST["original-text-url"] == '') {
