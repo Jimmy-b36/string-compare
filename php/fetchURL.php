@@ -15,7 +15,12 @@ function getUrlContents(string $url): string
     return 'URL must start with http or https';
   }
   $url = strip_tags($url);
-  $page = file_get_contents("$url");
+  try {
+    $page = file_get_contents("$url");
+  } catch (Exception $e) {
+    return 'Error: ' . $e->getMessage();
+  }
+
   $page = preg_replace('/[^A-Za-z0-9<\/>\-]/', ' ', $page);
 
   // Check if <main> element exists
