@@ -3,20 +3,20 @@ class Counter
 {
   public function cleanString(string $string): array
   {
-    $COMMON_WORDS = ["the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he", "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this", "have", "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "people", "my", "than", "first", "water", "been", "call", "who", "its", "now", "find", "long", "down", "day", "did", "get", "come", "made", "may", "part", " ", 'sit'];
+    $COMMON_WORDS = ["the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he", "was", "for", "on", "are", "as", "with", "his", "they", "i", "at", "be", "this", "have", "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "people", "my", "than", "first", "water", "been", "call", "who", "its", "now", "find", "long", "down", "day", "did", "get", "come", "made", "may", "part", " ", 'sit', "b", "c", "d", "e", "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
 
     $string = preg_replace('/[^A-Za-z0-9\- \n]/', '', $string);
     $string = preg_replace('/(--)/', ' ', $string);
     $string = preg_replace('/\s+/', ' ', $string);
     $stringArr = explode(' ', strtolower($string));
+    $newStrArr = array();
     for ($i = 0; $i < count($stringArr); $i++) {
-      if (in_array($stringArr[$i], $COMMON_WORDS)) {
-        unset($stringArr[$i]);
-        $stringArr = array_values($stringArr);
+      if (!in_array($stringArr[$i], $COMMON_WORDS)) {
+        array_push($newStrArr, $stringArr[$i]);
       }
     }
-    return $stringArr;
+    return $newStrArr;
   }
 
 
