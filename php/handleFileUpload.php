@@ -10,10 +10,7 @@ function handleFileUpload($file)
 {
   $MIME_TYPES = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword', 'text/plain', 'application/vnd.oasis.opendocument.text', 'application/msword', 'application/pdf'];
   $parser = new \Smalot\PdfParser\Parser();
-  if (!isset($file['tmp_name'])) {
-    return 'No file selected or Error uploading file';
-  }
-  if ($file['error'] !== 0) {
+  if (!isset($file['tmp_name']) || $file['error'] !== 0) {
     return 'No file selected or Error uploading file';
   }
   if (!in_array($file['type'], $MIME_TYPES)) {
@@ -24,22 +21,22 @@ function handleFileUpload($file)
   }
   if ($file['type'] === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
     $text = read_file_docx($file['tmp_name']);
-    return htmlspecialchars($text);
+    return htmlspecialchars($text, ENT_HTML5, 'UTF-8');
   }
   if ($file['type'] === 'application/msword') {
     $text = read_file_docx($file['tmp_name']);
-    return htmlspecialchars($text);
+    return htmlspecialchars($text, ENT_HTML5, 'UTF-8');
   }
   if ($file['type'] === 'application/vnd.oasis.opendocument.text') {
     $text = read_file_odt($file['tmp_name']);
     $text = preg_replace('/<(.*?)>/', ' ', $text);
     $text = preg_replace('/\t+/', '', $text);
-    return htmlspecialchars($text);
+    return htmlspecialchars($text, ENT_HTML5, 'UTF-8');
   }
   if ($file['type'] === 'text/plain') {
     try {
       $text = file_get_contents($file['tmp_name']);
-      return htmlspecialchars($text);
+      return htmlspecialchars($text, ENT_HTML5, 'UTF-8');
     } catch (Exception $e) {
       return 'Error reading file';
     }
@@ -48,11 +45,11 @@ function handleFileUpload($file)
     $pdf = $parser->parseFile($file['tmp_name']);
     $text = $pdf->getText();
     $text = preg_replace('/\t+/', '', $text);
-    return htmlspecialchars($text);
+    return htmlspecialchars($text, ENT_HTML5, 'UTF-8');
   }
   try {
     $text = file_get_contents($file['tmp_name']);
-    return htmlspecialchars($text);
+    return htmlspecialchars($text, ENT_HTML5, 'UTF-8');
   } catch (Exception $e) {
     return 'Error reading file';
   }

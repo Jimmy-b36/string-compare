@@ -8,32 +8,37 @@
 
 function getUrlContents(string $url): string
 {
+  $url = filter_var($url, FILTER_SANITIZE_URL);
+
   if (!filter_var($url, FILTER_VALIDATE_URL)) {
     return 'Invalid URL';
   }
-  if (strpos($url, 'http') === false || strpos($url, 'https') === false) {
+  if (!preg_match('/^https?:\/\//', $url)) {
     return 'URL must start with http or https';
   }
-  $url = preg_replace("/(<script)(.*?)(<\/script>)/", '', $url);
   $url = strip_tags($url);
+
   try {
     $page = file_get_contents("$url");
   } catch (Exception $e) {
     return 'Error: ' . $e->getMessage();
   }
 
+  $page = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $page);
   $page = preg_replace('/[^A-Za-z0-9<\/>\-]/', ' ', $page);
 
-  // Check if <main> element exists
-  if (strpos($page, '<main') !== false) {
-    preg_match("/<main[^>]*>(.*?)<\/main>/is", $page, $matches);
-    return preg_replace('/\s+/', ' ', strip_tags($matches[1]));
+  libxml_use_internal_errors(true);
+  $dom = new DOMDocument();
+  $dom->loadHTML($page);
+  libxml_clear_errors();
+
+  $mainElement = $dom->getElementsByTagName('main')->item(0);
+  if ($mainElement) {
+    return htmlentities($mainElement->textContent);
   }
 
-  preg_match("/<body[^>]*>(.*?)<\/body>/is", $page, $matches);
-  // If <main> element doesn't exist, return the entire page
-  return preg_replace('/\s+/', ' ', strip_tags($matches[1]));
+  $bodyElement = $dom->getElementsByTagName('body')->item(0);
+  return htmlentities($bodyElement->textContent);
 }
-
 
 ?>
