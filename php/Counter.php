@@ -13,7 +13,9 @@ class Counter
     $newStrArr = array();
     for ($i = 0; $i < count($stringArr); $i++) {
       if (!in_array($stringArr[$i], $COMMON_WORDS)) {
-        array_push($newStrArr, $stringArr[$i]);
+        if (!is_numeric($stringArr[$i])) {
+          array_push($newStrArr, $stringArr[$i]);
+        }
       }
     }
     return $newStrArr;
