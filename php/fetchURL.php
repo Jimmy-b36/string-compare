@@ -14,6 +14,7 @@ function getUrlContents(string $url): string
   if (strpos($url, 'http') === false || strpos($url, 'https') === false) {
     return 'URL must start with http or https';
   }
+  $url = preg_replace("/(<script)(.*?)(<\/script>)/", '', $url);
   $url = strip_tags($url);
   try {
     $page = file_get_contents("$url");
