@@ -114,10 +114,12 @@
 
   // Keep original text in textarea after submit
   if (isset($_POST["original-text"])) {
-    $originalTextarea .= $_POST["original-text"];
+    $originalText = inputCleaner($_POST["original-text"]);
+    $originalTextarea .= $originalText;
   }
   if (isset($_POST["new-text"])) {
-    $newTextarea .= $_POST["new-text"];
+    $newText = inputCleaner($_POST["new-text"]);
+    $newTextarea .= $newText;
   }
   $newTextarea .= '</textarea>';
   $originalTextarea .= '</textarea>';
@@ -144,22 +146,41 @@
 
     require_once 'StringCompare.php';
     $stringCompare = new StringCompare();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $original_text = htmlspecialchars($_POST["original-text"]);
+      $new_text = htmlspecialchars($_POST["new-text"]);
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+    }
     if (isset($_POST["original-text"])) {
       $WORD_COUNT_OLD = str_word_count($_POST["original-text"]);
       $WORD_COUNT_NEW = str_word_count($_POST["new-text"]);
       $CHARACTER_COUNT_OLD = strlen($_POST["original-text"]);
       $CHARACTER_COUNT_NEW = strlen($_POST["new-text"]);
-      $original_text = $_POST["original-text"];
-      $new_text = $_POST["new-text"];
-      if ($original_text == '' || $new_text == '') {
+
+
+      if ($original_text == '') {
         $result = [
           'old' => 'No text entered',
+          'new' => $new_text
+        ];
+      } elseif ($new_text == '') {
+        $result = [
+          'old' => $original_text,
           'new' => 'No text entered'
         ];
       } else {
         $result = $stringCompare->stringDiff($original_text, $new_text);
         debug_to_console('old', $result['old']);
       }
+    }
+
+    function inputCleaner(string $input)
+    {
+      $input = trim($input);
+      $input = stripslashes($input);
+      $input = htmlspecialchars($input);
+      $input = preg_replace('/javascript:\//', '', $input);
+      return $input;
     }
     ?>
     <div class="str-results">
