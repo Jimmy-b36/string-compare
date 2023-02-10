@@ -179,7 +179,6 @@
       $input = trim($input);
       $input = stripslashes($input);
       $input = htmlspecialchars($input);
-      $input = preg_replace('/javascript:\//', '', $input);
       return $input;
     }
     ?>
