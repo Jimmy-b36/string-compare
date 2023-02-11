@@ -41,10 +41,10 @@ class StringCompare
     foreach ($diff as $item) {
       if (is_array($item)) {
         if ($item['deleted']) {
-          $oldString .= "<del>" . (implode(' ', $item['deleted'])) . "</del>";
+          $oldString .= "<del>" . (implode(' ', $item['deleted'])) . "</del> ";
         }
         if ($item['inserted']) {
-          $newString .= "<ins>" . (implode(' ', $item['inserted'])) . "</ins>";
+          $newString .= "<ins>" . (implode(' ', $item['inserted'])) . "</ins> ";
         }
       } else {
         $oldString .= $item . ' ';
