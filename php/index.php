@@ -147,9 +147,14 @@
     require_once 'StringCompare.php';
     $stringCompare = new StringCompare();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $original_text = htmlspecialchars($_POST["original-text"]);
-      $new_text = htmlspecialchars($_POST["new-text"]);
-      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+      if (!isset($_POST["original-text"]) || !isset($_POST["new-text"])) {
+        $original_text = '';
+        $new_text = '';
+
+      } else {
+        $original_text = htmlspecialchars($_POST["original-text"]);
+        $new_text = htmlspecialchars($_POST["new-text"]);
+      }
     }
     if (isset($_POST["original-text"])) {
       $WORD_COUNT_OLD = str_word_count($_POST["original-text"]);
