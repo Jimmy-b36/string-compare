@@ -9,13 +9,17 @@
 function getUrlContents(string $url): string
 {
   $url = filter_var($url, FILTER_SANITIZE_URL);
+  if (!preg_match('/^https?:\/\//', $url)) {
+    return 'URL must start with http or https';
+  }
 
   if (!filter_var($url, FILTER_VALIDATE_URL)) {
     return 'Invalid URL';
   }
-  if (!preg_match('/^https?:\/\//', $url)) {
-    return 'URL must start with http or https';
+  if (!preg_match('/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/', $url)) {
+    return 'Invalid URL';
   }
+
   $url = strip_tags($url);
 
   try {
