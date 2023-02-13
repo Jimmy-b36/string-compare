@@ -1,5 +1,13 @@
 {
   "require": {
     "smalot/pdfparser": "^2.3"
+  },
+  "require-dev": {
+    "pestphp/pest": "^1.22"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   }
 }
