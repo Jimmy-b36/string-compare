@@ -36,11 +36,15 @@ function getUrlContents(string $url): string
   if ($mainElement) {
     return htmlentities($mainElement->textContent);
   }
-  $bodyElements = '';
-  $bodyElement = $dom->getElementsByTagName('div');
-  foreach ($bodyElement as $element) {
-    $bodyElements .= $element->textContent;
+  $allElements = '';
+  $headerElement = $dom->getElementsByTagName('header');
+  foreach ($headerElement as $element) {
+    $allElements .= $element->textContent;
   }
-  return trim(htmlentities($bodyElements));
+  $divElement = $dom->getElementsByTagName('div');
+  foreach ($divElement as $element) {
+    $allElements .= $element->textContent;
+  }
+  return trim(htmlentities($allElements));
 }
 ?>
