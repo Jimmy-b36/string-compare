@@ -1,6 +1,6 @@
 <?php
 require_once('fetchURL.php');
-$EXAMPLE_CONTENTS = '      Example Domain     This domain is for use in illustrative examples in documents  You may use this     domain in literature without prior coordination or asking for permission      More information     ';
+$EXAMPLE_CONTENTS = 'Example Domain     This domain is for use in illustrative examples in documents  You may use this     domain in literature without prior coordination or asking for permission      More information';
 it("should return the contents of a valid URL", function () {
   $url = 'https://www.example.com';
   $result = getUrlContents($url);
