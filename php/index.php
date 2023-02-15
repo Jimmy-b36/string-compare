@@ -14,6 +14,8 @@
   ini_set('post_max_size', '50M');
   ini_set('upload_max_filesize', '50M');
   ini_set('memory_limit', '512M');
+  require_once 'fetchURL.php';
+  require_once 'handleFileUpload.php';
 
   function debug_to_console($str, $data)
   {
@@ -23,7 +25,6 @@
 
     echo "<script>console.log('Debug Objects: " . $str . " " . $output . "' );</script>";
   } ?>
-
   <div class="header">
     <h1>Text Compare - Plagiarism Check Between Two Documents</h1>
   </div>
@@ -84,9 +85,6 @@
   </script>
 
   <?php
-  require_once 'fetchURL.php';
-  require_once 'handleFileUpload.php';
-
   $originalTextarea = '<textarea name="original-text" maxLength="68000" class="input-box" id="original-text" cols="75" rows="30">';
   $newTextarea = '<textarea name="new-text" maxLength="68000" class="input-box" id="new-text" cols="75" rows="30">';
   // <!-- URL upload logic -->
@@ -126,6 +124,15 @@
   ?>
 
 
+  <div class="container">
+    <div class="input-container">
+      <p class="color-key-text-red">The text has been removed when comparing to the <strong>new</strong> text
+      </p>
+      <p class="color-key-text-green">The text has been added when comparing to the
+        <strong>original</strong> text
+      </p>
+    </div>
+  </div>
   <form action="index.php" method="POST" id="string-new-form" class="input-container">
     <div class="outer-input-container">
       <div class='input-container'>
@@ -198,7 +205,6 @@
       } ?>
     </div>
   </div>
-
   <div class="kw-container--outer">
     <?php include 'kw-table.php'; ?>
     <div class="wc-container">
@@ -222,7 +228,16 @@
         }
         ?>
       </p>
+      <div class="container">
+        <div class="input-container">
+          <p class="color-key-text-red">red highlight means that the KW appears less than in the compared text
+          </p>
+          <p class="color-key-text-green">green highlight means that the KW appears more than in the compared text
+          </p>
+        </div>
+      </div>
     </div>
+
     <script>
       const kwButton = document.getElementById('kw-changer');
       kwButton.addEventListener('click', function () {
