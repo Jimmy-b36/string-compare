@@ -126,11 +126,13 @@
 
   <div class="container">
     <div class="input-container">
-      <p class="color-key-text-red">The text has been removed when comparing to the <strong>new</strong> text
+      <p class="key-text text-red">The text has been removed when comparing to the <strong>new</strong> text
       </p>
-      <p class="color-key-text-green">The text has been added when comparing to the
+      <p class="key-text text-green">The text has been added when comparing to the
         <strong>original</strong> text
       </p>
+      <p class="key-text underline">If you would like to compare a URL & custom text, submit the URL first then input
+        the text</p>
     </div>
   </div>
   <form action="index.php" method="POST" id="string-new-form" class="input-container">
@@ -230,9 +232,9 @@
       </p>
       <div class="container">
         <div class="input-container">
-          <p class="color-key-text-red">red highlight means that the KW appears less than in the compared text
+          <p class="key-text text-red">red highlight means that the KW appears less than in the compared text
           </p>
-          <p class="color-key-text-green">green highlight means that the KW appears more than in the compared text
+          <p class="key-text text-green">green highlight means that the KW appears more than in the compared text
           </p>
         </div>
       </div>
