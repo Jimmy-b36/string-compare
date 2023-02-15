@@ -38,7 +38,7 @@ function handleFileUpload($file)
       $text = file_get_contents($file['tmp_name']);
       return htmlspecialchars($text, ENT_HTML5, 'UTF-8');
     } catch (Exception $e) {
-      return 'Error reading file';
+      return "$e Error reading file";
     }
   }
   if ($file['type'] === 'application/pdf') {
