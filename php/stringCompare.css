@@ -245,3 +245,29 @@ del {
   background-color: #ff9b9b;
   text-decoration: none;
 }
+
+.red-box {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+}
+.green-box {
+  height: 20px;
+  width: 20px;
+  background-color: green;
+  margin: 1em;
+}
+
+.key-text {
+  margin: 0.5em;
+}
+
+.text-green {
+  background-color: #aeffae;
+}
+.text-red {
+  background-color: #ff9b9b;
+}
+.underline {
+  text-decoration: underline;
+}
