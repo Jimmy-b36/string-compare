@@ -236,6 +236,7 @@
           </p>
           <p class="key-text text-green">green highlight means that the KW appears more than in the compared text
           </p>
+          <p class="key-text">No highlight indicates that it was not found in both texts</p>
         </div>
       </div>
     </div>
