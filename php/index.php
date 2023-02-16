@@ -131,8 +131,6 @@
       <p class="key-text text-green">The text has been added when comparing to the
         <strong>original</strong> text
       </p>
-      <p class="key-text underline">If you would like to compare a URL & custom text, submit the URL first then input
-        the text</p>
     </div>
   </div>
   <form action="index.php" method="POST" id="string-new-form" class="input-container">
